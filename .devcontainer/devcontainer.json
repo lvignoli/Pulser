@@ -1,0 +1,16 @@
+{
+    "name": "pulser-dev-container",
+    "dockerFile": "Dockerfile",
+    "context": "..",
+    "extensions": [
+        "ms-python.python",
+    ],
+    "settings": {
+        "python.analysis.typeCheckingMode": "basic",
+        "editor.formatOnSave": true,
+        "python.formatting.provider": "black",
+        "python.linting.mypyEnabled": true,
+        "python.linting.flake8Enabled": true,
+        "python.testing.pytestEnabled": true,
+    },
+}
