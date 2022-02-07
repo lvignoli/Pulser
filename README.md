@@ -51,6 +51,9 @@ Then, you can do the following to run the test suite and report test coverage:
 ```bash
 pytest --cov pulser
 ```
+
+_If you have trouble installing Pulser on a Apple Silicon M series chip, there are [dedicated instructions here](AppleSilicon.md)._
+
 ## Contributing
 
 Want to contribute to Pulser? Great! See [How to Contribute][contributing] for information on how you can do so.
