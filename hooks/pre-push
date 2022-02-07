@@ -1,0 +1,59 @@
+#!/bin/sh
+# git hook used to run all checks before pushing a branch on a distant repository.
+# From the root dir of the repository, link it with
+#         ln -s ../../hooks/git-push .git/hooks/
+# Be aware that the tests take some time to run, so avoid using it if you are pushing a lot in your workflow.
+
+BOLD='\033[1m'
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+NC='\033[0m' # No color, normal font
+
+printf "${BOLD}Running black...${NC}"
+if black --check --quiet .
+then
+    printf "                 ${GREEN}[OK]\n${NC}"
+else
+    printf "                 ${RED}[FAIL]\n${NC}"
+    exit 1
+fi
+
+printf "${BOLD}Running isort....${NC}"
+if isort -qc . 2> /dev/null
+then
+    printf "                ${GREEN}[OK]\n${NC}"
+else
+    printf "                ${RED}[FAIL]\n${NC}"
+    exit 1
+fi
+
+printf "${BOLD}Running flake8....${NC}"
+if flake8 -qq
+then
+    printf "               ${GREEN}[OK]\n${NC}"
+else
+    printf "               ${RED}[FAIL]\n${NC}"
+    exit 1
+fi
+
+printf "${BOLD}Running mypy...${NC}"
+if mypy 1> /dev/null
+then
+    printf "                  ${GREEN}[OK]\n${NC}"
+else
+    printf "                  ${RED}[FAIL]\n${NC}"
+    exit 1
+fi
+
+# Comment this part for faster but untested push.
+printf "${BOLD}Running pytest --cov pulser...${NC}"
+if pytest --quiet --cov pulser 1> /dev/null
+then
+    printf "   ${GREEN}[OK]\n${NC}"
+else
+    printf "   ${RED}[FAIL]\n${NC}"
+    exit 1
+fi
+
+printf "${BOLD}Good to push ;)\n${NC}"
+exit 0
