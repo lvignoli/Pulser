@@ -18,8 +18,8 @@ from __future__ import annotations
 import copy
 import json
 import os
-import warnings
 from collections import namedtuple
+import warnings
 from collections.abc import Callable, Generator, Iterable
 from functools import wraps
 from itertools import chain
