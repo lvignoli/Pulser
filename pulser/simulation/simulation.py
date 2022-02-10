@@ -73,6 +73,7 @@ class Simulation:
         self,
         sequence: Sequence,
         sampling_rate: float = 1.0,
+        mod_output: bool = False,
         config: Optional[SimConfig] = None,
         evaluation_times: Union[float, str, ArrayLike] = "Full",
     ) -> None:
@@ -92,7 +93,13 @@ class Simulation:
         self._interaction = "XY" if self._seq._in_xy else "ising"
         self._qdict = self._seq.qubit_info
         self._size = len(self._qdict)
-        self._tot_duration = self._seq.get_duration()
+
+        # Handle output modulation
+        self.mod_output = mod_output
+        self._tot_duration = self._seq.get_duration(
+            include_fall_time=True if self.mod_output else False
+        )
+
         if not (0 < sampling_rate <= 1.0):
             raise ValueError(
                 "The sampling rate (`sampling_rate` = "
