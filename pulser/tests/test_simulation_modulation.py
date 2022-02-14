@@ -15,12 +15,14 @@
 
 import numpy as np
 import pytest
+import qutip
 from qutip import Qobj
 
 from pulser import Pulse, Register, Sequence
 from pulser.channels import Rydberg
 from pulser.devices import Device
-from pulser.waveforms import RampWaveform
+from pulser.simulation import Simulation
+from pulser.waveforms import BlackmanWaveform, RampWaveform
 
 
 @pytest.fixture
@@ -86,6 +88,35 @@ def wanted_final_state() -> Qobj:
     """The final state of the simulation with modulation."""
     ...
     return Qobj()
+
+
+# @pytest.fixture
+# def single_blackman
+
+
+def test_blackman_modulated_samples(input_seq):
+    ...
+
+
+# ! Pas très utile: il ne fail pas avant l'implémentation !!!
+def test_blackman_final_state(single_atom_register, modulated_mock_device):
+    """Test that the modulation of a Blackman pi pulse indeed gives a |1>."""
+    seq = Sequence(single_atom_register, modulated_mock_device)
+    seq.declare_channel("ch0", "rydberg_global")
+    seq.add(
+        Pulse.ConstantDetuning(BlackmanWaveform(1000, np.pi), 0.0, 0),
+        "ch0",
+    )
+    seq.measure("ground-rydberg")
+
+    sim = Simulation(seq, mod_output=True)
+    sim.initial_state = "all-ground"
+    print(f"The inititial state is {sim.initial_state}")
+    res = sim.run()
+
+    got = res.get_final_state()
+    want = qutip.basis(2, 0)
+    np.testing.assert_allclose(got, want, 0.0, 1e-5)
 
 
 def test_final_state(input_seq, wanted_final_state):
