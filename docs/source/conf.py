@@ -65,6 +65,7 @@ autodoc_typehints = "none"
 #
 # html_theme = "sphinx_rtd_theme"
 html_theme = "sphinx_book_theme"
+html_logo = "files/pulser_logo_1.png"
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
